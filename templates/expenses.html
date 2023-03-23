@@ -1,0 +1,96 @@
+
+ <!DOCTYPE html>
+ {% load static %}
+ <html lang="en" title="Coding design">
+ 
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Expenses List</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+     <link rel="stylesheet" href="{% static 'exCSS/style.css' %}">
+ </head>
+ 
+ <body>
+    {% comment %} <div >
+        <a type="submit" href="{% url 'logout' %}" class="circle-button" >logout</a>
+    </div> {% endcomment %}
+    <nav class="navbar">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="{% url 'addexpense' %}">Add Expense</a></li>
+          {% if request.user.is_authenticated %}
+          <li><a href="{% url 'logout' %}">logout</a></li>
+          {% else %}
+          <li><a href="{% url 'login' %}">login</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    
+     <main class="table">
+         <section class="table__header">
+             <h1>Customer's Orders</h1>
+
+             <form class="form" action="" method="POST">
+                {% csrf_token %}
+                <p>filter the blogs according to category</p>
+            
+                {% for field in form %}
+                            <!-- Input:Text -->
+                            <div class="form__field">
+                                <label for="formInput#text">{{field.label}}</label>
+                                {{field}}
+                            </div>
+                            {% endfor %}
+                <a class="btn btn--sub btn--lg  my-md" href="{% url 'expenses' %}"> Refresh </a>
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm" />
+               
+            </form>
+             
+         </section>
+         <section class="table__body">
+             <table>
+                 <thead>
+                     <tr>
+                         <th> Name <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Category <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Date of Expense <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Amount <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Updated At <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Created by <span class="icon-arrow">&UpArrow;</span></th>
+                         <th> Handle <span class="icon-arrow">&UpArrow;</span></th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                    {% for expense in expenses %}
+                     <tr>
+                         <td> {{expense.Name}} </td>
+                        <td>{{expense.Category}}</td>
+                         <td> {{expense.Date_of_Expense}} </td>
+                         <td> {{expense.Amount}}</td>
+                         <td> {{expense.Updated}}</td>
+                         <td> {{expense.owner.username}}</td>
+
+                         <td> 
+                            {% if request.user.is_member%}
+
+                            <a href="{% url 'updateexpense' expense.id %}"><span class="update-icon"><i class="fas fa-edit"></i></span></a>
+                            <a href="{% url 'deleteexpense' expense.id %}"><span class="delete-icon"><i class="fas fa-trash-alt"></i></span></a> 
+                            
+                            {% endif %}
+                        </td>
+                     </tr>
+                    {% endfor %}
+                 </tbody>
+             </table>
+             
+             
+             
+             
+         </section>
+           
+     </main>
+ </body>
+ 
+ </html>
